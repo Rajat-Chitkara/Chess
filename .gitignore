@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Local database (personal game data) & downloaded data
+data/
+*.db
+*.sqlite3
+lichess_db_puzzle.csv*
+*.zst
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
