@@ -7,7 +7,6 @@ REM ============================================================
 setlocal
 set "APPDIR=%~dp0"
 set "TARGET=%APPDIR%chessIQ.exe"
-set "SHORTCUT=%USERPROFILE%\Desktop\chessIQ.lnk"
 
 if not exist "%TARGET%" (
     echo ERROR: chessIQ.exe was not found next to this script.
@@ -15,6 +14,11 @@ if not exist "%TARGET%" (
     pause
     exit /b 1
 )
+
+REM Resolve the REAL Desktop folder (handles OneDrive-redirected desktops).
+for /f "usebackq delims=" %%D in (`powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"`) do set "DESKTOP=%%D"
+if not defined DESKTOP set "DESKTOP=%USERPROFILE%\Desktop"
+set "SHORTCUT=%DESKTOP%\chessIQ.lnk"
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut($env:SHORTCUT); $s.TargetPath=$env:TARGET; $s.WorkingDirectory=$env:APPDIR; $s.IconLocation=$env:TARGET + ',0'; $s.Description='chessIQ - personal chess trainer'; $s.Save()"
 
