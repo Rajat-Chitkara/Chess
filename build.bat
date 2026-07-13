@@ -35,8 +35,9 @@ pyinstaller --noconfirm --clean --name chessIQ --onedir --console ^
     --add-data "sample.pgn;." ^
     desktop.py || goto :error
 
-echo [4/4] Bundling Stockfish next to the exe...
+echo [4/4] Bundling Stockfish + shortcut helper next to the exe...
 xcopy /E /I /Y "stockfish" "dist\chessIQ\stockfish" >nul || goto :error
+copy /Y "Create Desktop Shortcut.bat" "dist\chessIQ\" >nul || goto :error
 
 echo.
 echo ============================================================

@@ -27,6 +27,8 @@ before building.)
 **Run it (your friends — nothing to install):**
 1. Unzip the `chessIQ` folder anywhere.
 2. Double-click **`chessIQ.exe`** — it opens chessIQ in the browser.
+   (Optional: double-click **`Create Desktop Shortcut.bat`** once to put a
+   `chessIQ` shortcut on your Desktop.)
 3. Import your chess.com / Lichess games, hit **Analyse**, then **Practice**.
 
 Each person's data is a private SQLite file at `chessIQ\data\chessiq.db`, right
