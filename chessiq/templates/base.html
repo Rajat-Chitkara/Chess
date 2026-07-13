@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}chessIQ{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♞</text></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">chess<span>IQ</span></a>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{{ 'on' if active=='dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('practice') }}" class="{{ 'on' if active=='practice' }}">Practice</a>
+      <a href="{{ url_for('games') }}" class="{{ 'on' if active=='games' }}">Games</a>
+      <a href="{{ url_for('import_page') }}" class="{{ 'on' if active=='import' }}">Import</a>
+    </nav>
+    <div class="profile-switch">
+      <span class="ps-label">Profile</span>
+      <form method="POST" action="{{ url_for('profile_select') }}" id="profile-form">
+        <select name="profile" onchange="document.getElementById('profile-form').submit()">
+          {% for p in profiles %}
+          <option value="{{ p }}" {{ 'selected' if p == current_profile }}>{{ p }}</option>
+          {% endfor %}
+        </select>
+      </form>
+      <button id="profile-add" class="ps-add" title="New profile">＋</button>
+    </div>
+  </header>
+  <script>
+    document.getElementById("profile-add").addEventListener("click", async () => {
+      const name = prompt("New profile name (your username in those games):");
+      if (!name) return;
+      const r = await fetch("/api/profile/create", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim() })
+      }).then(r => r.json());
+      if (r.ok) location.reload(); else alert(r.error || "Could not create profile");
+    });
+  </script>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

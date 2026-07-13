@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · chessIQ{% endblock %}
+{% block content %}
+<h1>Your chess profile</h1>
+
+<div class="stat-row">
+  <div class="stat"><span class="stat-num">{{ counts.games }}</span><span class="stat-label">games imported</span></div>
+  <div class="stat"><span class="stat-num">{{ counts.analysed }}</span><span class="stat-label">analysed</span></div>
+  <div class="stat"><span class="stat-num">{{ counts.puzzles }}</span><span class="stat-label">puzzles ready</span></div>
+</div>
+
+{% if areas %}
+<section class="panel">
+  <h2>Skill areas</h2>
+  <div class="meters">
+    {% for a in areas %}
+    <div class="meter">
+      <div class="meter-head">
+        <span class="meter-name">{{ a.area }}</span>
+        <span class="meter-val">{{ '%.1f'|format(a.score) }}
+          {% if a.sample_size < 3 %}<em class="lowsample">low sample</em>{% endif %}
+        </span>
+      </div>
+      <div class="meter-track">
+        <div class="meter-fill s{{ (a.score // 20)|int }}" style="width: {{ a.score }}%"></div>
+      </div>
+      <div class="meter-sub">{{ a.sample_size }} moves</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if weak %}
+<section class="panel">
+  <h2>Weakest sub-areas — practice these</h2>
+  <table class="tbl">
+    <thead><tr><th>Area</th><th>Sub-area</th><th>Score</th><th>Moves</th></tr></thead>
+    <tbody>
+      {% for w in weak %}
+      <tr>
+        <td>{{ w.area }}</td>
+        <td>{{ w.subarea }}</td>
+        <td><span class="score-pill s{{ (w.score // 20)|int }}">{{ '%.1f'|format(w.score) }}</span></td>
+        <td>{{ w.sample_size }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn" href="{{ url_for('practice') }}">Start practicing →</a>
+</section>
+{% endif %}
+
+{% else %}
+<section class="panel empty">
+  <h2>No scores yet</h2>
+  <p>Import some games, run analysis, and your skill breakdown will appear here.</p>
+  <a class="btn" href="{{ url_for('import_page') }}">Import games →</a>
+</section>
+{% endif %}
+
+{% if pstats.areas %}
+<section class="panel">
+  <h2>Puzzle performance</h2>
+  <p class="muted">How often you solve puzzles in each area. Weaker areas are shown
+    first and get served to you more often in Practice.</p>
+  <div class="meters">
+    {% for a in pstats.areas %}
+    <div class="meter">
+      <div class="meter-head">
+        <span class="meter-name">{{ a.area }}</span>
+        <span class="meter-val">{{ '%.0f'|format(a.accuracy) }}%
+          <em class="lowsample">{{ a.solved }}/{{ a.attempts }} solved</em>
+        </span>
+      </div>
+      <div class="meter-track">
+        <div class="meter-fill s{{ (a.accuracy // 20)|int }}" style="width: {{ a.accuracy }}%"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if pstats.subareas %}
+  <h3>By theme</h3>
+  <table class="tbl">
+    <thead><tr><th>Area</th><th>Theme</th><th>Accuracy</th><th>Attempts</th></tr></thead>
+    <tbody>
+      {% for s in pstats.subareas %}
+      <tr>
+        <td>{{ s.area }}</td>
+        <td>{{ s.subarea }}</td>
+        <td><span class="score-pill s{{ (s.accuracy // 20)|int }}">{{ '%.0f'|format(s.accuracy) }}%</span></td>
+        <td>{{ s.attempts }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

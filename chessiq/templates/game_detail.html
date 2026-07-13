@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Game Review · chessIQ{% endblock %}
+{% block content %}
+
+{% if not game %}
+<section class="panel empty">
+  <h2>Game not found</h2>
+  <a class="btn" href="{{ url_for('games') }}">← Back to games</a>
+</section>
+{% else %}
+
+<p class="crumb"><a href="{{ url_for('games') }}">← Games</a></p>
+
+{% if not game.analysed %}
+<section class="panel empty">
+  <h2>Not analysed yet</h2>
+  <p>Run analysis on the Import page, then come back for the full game review.</p>
+  <a class="btn" href="{{ url_for('import_page') }}">Go to Import →</a>
+</section>
+{% else %}
+
+<div class="review-layout">
+
+  <!-- LEFT: eval bar + board + players -->
+  <div class="board-col">
+    <div class="player-tag top">
+      <span class="pt-avatar">♟</span>
+      <span class="pt-name">{{ players.top.name }}</span>
+      {% if players.top.rating %}<span class="pt-rating">({{ players.top.rating }})</span>{% endif %}
+    </div>
+
+    <div class="board-row">
+      <div class="eval-bar {{ 'flip' if orientation == 'black' }}" id="eval-bar" title="Evaluation (white advantage)">
+        <div class="eval-white" id="eval-white" style="height:50%"></div>
+        <span class="eval-num" id="eval-num">0.0</span>
+      </div>
+      <div id="board" class="board" aria-label="chess board"></div>
+    </div>
+
+    <div class="player-tag bottom">
+      <span class="pt-avatar you">♙</span>
+      <span class="pt-name">{{ players.bottom.name }}</span>
+      {% if players.bottom.rating %}<span class="pt-rating">({{ players.bottom.rating }})</span>{% endif %}
+      <span class="pt-you">you</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: game review panel -->
+  <aside class="review-panel">
+    <div class="rp-header">★ Game Review</div>
+
+    <div class="coach">
+      <div class="coach-avatar">🧑‍🏫</div>
+      <div class="coach-bubble">
+        <div class="cb-top">
+          <span class="cb-glyph" id="cb-glyph"></span>
+          <span class="cb-title" id="cb-title">Starting position</span>
+          <span class="cb-eval" id="cb-eval"></span>
+        </div>
+        <div class="cb-text" id="cb-text">Step through the game to review each move.</div>
+        <div class="cb-explain" id="cb-explain" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="rp-actions">
+      <button id="btn-explain" class="btn ghost">💡 Explain</button>
+      <button id="btn-next2" class="btn">Next →</button>
+    </div>
+
+    <div class="movetable" id="movetable">
+      {% for row in move_rows %}
+      <div class="mt-row">
+        <span class="mt-num">{{ row.num }}.</span>
+        <span class="mt-cell">
+          {% if row.white %}
+          <span class="mt-move {{ row.white.q_cls }}{% if row.white.is_your_move %} mine{% endif %}" data-ply="{{ row.white.ply }}">
+            <span class="mt-badge {{ row.white.q_cls }}">{{ row.white.q_glyph }}</span>{{ row.white.move_san }}
+          </span>
+          {% endif %}
+        </span>
+        <span class="mt-cell">
+          {% if row.black %}
+          <span class="mt-move {{ row.black.q_cls }}{% if row.black.is_your_move %} mine{% endif %}" data-ply="{{ row.black.ply }}">
+            <span class="mt-badge {{ row.black.q_cls }}">{{ row.black.q_glyph }}</span>{{ row.black.move_san }}
+          </span>
+          {% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="eval-graph" id="eval-graph"></div>
+
+    <div class="rp-nav">
+      <button id="nav-first" class="navbtn" title="Start (Home)">⏮</button>
+      <button id="nav-prev" class="navbtn" title="Previous (←)">◀</button>
+      <button id="nav-play" class="navbtn" title="Auto-play">▶</button>
+      <button id="nav-next" class="navbtn" title="Next (→)">▶▏</button>
+      <button id="nav-last" class="navbtn" title="End (End)">⏭</button>
+    </div>
+    <p class="rp-foot"><a href="#" id="nav-mistake">⚑ jump to next mistake</a> · use ← → keys</p>
+  </aside>
+</div>
+
+<script type="application/json" id="game-data">
+{{ {"orientation": orientation, "start_fen": start_fen,
+    "moves": moves, "mistakePlies": mistake_plies, "evals": evals} | tojson }}
+</script>
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>if (document.getElementById("game-data")) chessIQ.initGameDetail();</script>
+{% endblock %}

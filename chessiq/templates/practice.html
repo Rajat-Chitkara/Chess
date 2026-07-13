@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Practice · chessIQ{% endblock %}
+{% block content %}
+<h1>Practice</h1>
+<p class="muted">Solve puzzles from your own blunders and your weak areas. Correct answers get
+scheduled further out; missed ones come back tomorrow (spaced repetition).</p>
+
+<div class="practice-wrap">
+  <div id="board" class="board" aria-label="chess board"></div>
+
+  <aside class="puzzle-side">
+    <div id="puzzle-meta" class="puzzle-meta">
+      <div class="pm-row"><span class="pm-label">To move</span><span id="pm-turn">—</span></div>
+      <div class="pm-row"><span class="pm-label">Rating</span><span id="pm-rating">—</span></div>
+      <div class="pm-row"><span class="pm-label">Queue</span><span id="pm-progress">—</span></div>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+
+    <div class="puzzle-actions">
+      <button id="btn-hint" class="btn ghost">Show hint</button>
+      <button id="btn-skip" class="btn ghost">Skip</button>
+      <button id="btn-retry" class="btn ghost" style="display:none">↺ Retry</button>
+      <button id="btn-next" class="btn" style="display:none">Next puzzle →</button>
+    </div>
+  </aside>
+</div>
+
+<div id="empty-state" class="panel empty" style="display:none">
+  <h2>No puzzles queued</h2>
+  <p>Generate puzzles from your analysed games first.</p>
+  <a class="btn" href="{{ url_for('import_page') }}">Go to Import →</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>chessIQ.initPractice();</script>
+{% endblock %}

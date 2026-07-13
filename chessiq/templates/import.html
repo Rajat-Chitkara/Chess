@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Import · chessIQ{% endblock %}
+{% block content %}
+<h1>Import &amp; analyse</h1>
+
+<div class="cols">
+  <section class="panel">
+    <h2>1 · Import games</h2>
+    <p class="muted">Importing into profile <strong>{{ current_profile }}</strong>.
+      Games are matched to this profile by its name in the PGN's White/Black headers
+      (switch profiles in the top-right). Games where <strong>{{ current_profile }}</strong>
+      isn't a player are skipped.</p>
+
+    <h3>From Lichess</h3>
+    <div class="field"><label>Lichess username (defaults to profile name)</label>
+      <input id="li-user" placeholder="{{ current_profile }}"></div>
+    <div class="field"><label>Max games</label><input id="li-max" type="number" value="30"></div>
+    <div class="field"><label>API token (optional)</label><input id="li-token" placeholder="lip_..."></div>
+    <button id="btn-li" class="btn">Import from Lichess</button>
+
+    <hr>
+
+    <h3>From PGN files (chess.com etc.)</h3>
+    <form id="pgn-form">
+      <div class="field">
+        <label>PGN file(s) — select several at once to bulk-import</label>
+        <input id="pgn-file" name="pgn" type="file" accept=".pgn" multiple>
+      </div>
+      <button type="submit" class="btn">Upload &amp; import</button>
+    </form>
+    <div id="import-msg" class="feedback"></div>
+  </section>
+
+  <section class="panel">
+    <h2>2 · Analyse &amp; score</h2>
+    {% if stockfish %}
+      <p class="muted">Stockfish detected at <code>{{ stockfish }}</code>.</p>
+    {% else %}
+      <p class="warn">Stockfish not detected. Install it and set the <code>STOCKFISH_PATH</code>
+      environment variable, then restart the server, to enable analysis.</p>
+    {% endif %}
+    <button id="btn-analyse" class="btn" {% if not stockfish %}disabled{% endif %}>Analyse pending games</button>
+    <div id="analyse-status" class="progress" style="display:none">
+      <div class="progress-track"><div id="analyse-bar" class="progress-bar"></div></div>
+      <span id="analyse-text"></span>
+    </div>
+
+    <hr>
+
+    <h2>3 · Build puzzles</h2>
+    <p class="muted">Turns your blunders into puzzles. Add a rating to also pull matching
+      Lichess puzzles (requires the puzzle DB to have been downloaded).</p>
+    <div class="field"><label>Your puzzle rating (optional)</label><input id="pz-rating" type="number" placeholder="e.g. 1350"></div>
+    <button id="btn-puzzles" class="btn">Generate puzzles</button>
+    <div id="puzzle-msg" class="feedback"></div>
+
+    <p style="margin-top:1.5rem"><a class="btn ghost" href="{{ url_for('practice') }}">Go practice →</a></p>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>chessIQ.initImport();</script>
+{% endblock %}
