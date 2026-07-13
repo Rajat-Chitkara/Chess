@@ -36,6 +36,13 @@ def cmd_import(args):
     print(f"Imported {inserted} new game(s), skipped {skipped} already-imported.")
 
 
+def cmd_import_chesscom(args):
+    from import_chesscom import import_chesscom
+    print(f"Fetching up to {args.max} games for {args.username} from chess.com...")
+    inserted, skipped, failed = import_chesscom(args.username, args.max, profile=args.username)
+    print(f"Imported {inserted} new game(s), skipped {skipped}, {failed} failed/not-yours.")
+
+
 def cmd_import_manual(args):
     import_path(args.username, args.path, args.source_label)
 
@@ -87,6 +94,11 @@ def build_parser():
     p_import.add_argument("--max", type=int, default=100)
     p_import.add_argument("--token", default=None)
     p_import.set_defaults(func=cmd_import)
+
+    p_import_cc = sub.add_parser("import-chesscom", help="Import games directly from the chess.com API")
+    p_import_cc.add_argument("username", help="Your chess.com username")
+    p_import_cc.add_argument("--max", type=int, default=30, help="How many recent games to pull")
+    p_import_cc.set_defaults(func=cmd_import_chesscom)
 
     p_import_manual = sub.add_parser("import-manual", help="Import chess.com (or any) PGN file(s) you've downloaded")
     p_import_manual.add_argument("username", help="Your username exactly as it appears in the PGN headers")

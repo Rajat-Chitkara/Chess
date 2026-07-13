@@ -143,6 +143,16 @@ window.chessIQ = (function () {
     const msg = document.getElementById("import-msg");
     const pzMsg = document.getElementById("puzzle-msg");
 
+    document.getElementById("btn-cc").addEventListener("click", async () => {
+      msg.textContent = "Fetching from chess.com…"; msg.className = "feedback info";
+      const res = await jpost("/api/import/chesscom", {
+        username: document.getElementById("cc-user").value.trim() || null,
+        max: parseInt(document.getElementById("cc-max").value || "30", 10),
+      });
+      if (res.ok) { msg.textContent = `Imported ${res.inserted} new game(s) into ${res.profile}, skipped ${res.skipped}, ${res.failed} not-yours/failed.`; msg.className = "feedback good"; }
+      else { msg.textContent = "Failed: " + res.error; msg.className = "feedback bad"; }
+    });
+
     document.getElementById("btn-li").addEventListener("click", async () => {
       msg.textContent = "Importing from Lichess…"; msg.className = "feedback info";
       const res = await jpost("/api/import/lichess", {

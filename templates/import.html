@@ -11,6 +11,14 @@
       (switch profiles in the top-right). Games where <strong>{{ current_profile }}</strong>
       isn't a player are skipped.</p>
 
+    <h3>From chess.com</h3>
+    <div class="field"><label>chess.com username (defaults to profile name)</label>
+      <input id="cc-user" placeholder="{{ current_profile }}"></div>
+    <div class="field"><label>Max games (most recent)</label><input id="cc-max" type="number" value="30"></div>
+    <button id="btn-cc" class="btn">Import from chess.com</button>
+
+    <hr>
+
     <h3>From Lichess</h3>
     <div class="field"><label>Lichess username (defaults to profile name)</label>
       <input id="li-user" placeholder="{{ current_profile }}"></div>

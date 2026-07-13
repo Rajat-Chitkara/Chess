@@ -307,6 +307,22 @@ def api_import_lichess():
         return jsonify({"ok": False, "error": f"{type(e).__name__}: {e}"}), 502
 
 
+@app.route("/api/import/chesscom", methods=["POST"])
+def api_import_chesscom():
+    data = request.get_json(force=True, silent=True) or {}
+    profile = current_profile()
+    # The chess.com handle to fetch; defaults to the profile name.
+    username = (data.get("username") or profile).strip()
+    max_games = int(data.get("max", 30))
+    try:
+        from import_chesscom import import_chesscom
+        inserted, skipped, failed = import_chesscom(username, max_games, profile=profile)
+        return jsonify({"ok": True, "inserted": inserted, "skipped": skipped,
+                        "failed": failed, "profile": profile})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"{type(e).__name__}: {e}"}), 502
+
+
 @app.route("/api/import/pgn", methods=["POST"])
 def api_import_pgn():
     # Games are imported under the currently selected profile — the profile name
