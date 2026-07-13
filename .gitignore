@@ -9,6 +9,14 @@ data/
 lichess_db_puzzle.csv*
 *.zst
 
+# Bundled Stockfish binary (fetched at build time, not committed)
+stockfish/
+
+# PyInstaller build output
+build/
+dist/
+*.spec
+
 # Virtualenvs
 .venv/
 venv/

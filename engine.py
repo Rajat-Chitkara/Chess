@@ -17,6 +17,8 @@ import chess
 import chess.engine
 from pathlib import Path
 
+from paths import app_dir
+
 ANALYSIS_DEPTH = 18                        # 16-20 is a good personal-use tradeoff
 MATE_SCORE = 100_000                       # cp value used to represent mate-in-N
 
@@ -42,6 +44,12 @@ def resolve_stockfish_path() -> str | None:
     env = os.environ.get("STOCKFISH_PATH")
     if env and Path(env).exists():
         return env
+
+    # Stockfish bundled with the app (next to chessIQ.exe, or in the project dir).
+    for rel in ("stockfish/stockfish.exe", "stockfish/stockfish"):
+        bundled = app_dir() / rel
+        if bundled.exists():
+            return str(bundled)
 
     for name in ("stockfish", "stockfish.exe"):
         found = shutil.which(name)

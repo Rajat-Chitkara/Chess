@@ -18,6 +18,7 @@ import traceback
 
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
+from paths import resource_path
 from db import get_conn, init_db, DEFAULT_PROFILES
 from analyse_game import analyse_game_by_id
 from engine import Analyser, resolve_stockfish_path
@@ -26,7 +27,11 @@ from puzzles_own_games import generate_from_blunders
 import puzzle_service
 import game_review
 
-app = Flask(__name__)
+# Bundle-aware folders so templates/static resolve both from source and when
+# frozen into a standalone app (PyInstaller).
+app = Flask(__name__,
+            template_folder=resource_path("templates"),
+            static_folder=resource_path("static"))
 app.secret_key = "chessiq-local-dev-key"   # only used to sign the local session cookie
 
 # Make sure the DB/tables exist (and are migrated) before the first request.

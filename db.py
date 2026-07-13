@@ -15,9 +15,12 @@ and data backfill).
 import sqlite3
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-DB_PATH = BASE_DIR / "data" / "chessiq.db"
-SCHEMA_PATH = BASE_DIR / "schema.sql"
+from paths import app_dir, resource_path
+
+# The database lives in a writable location (next to chessIQ.exe when frozen,
+# else the project dir). The schema is a bundled read-only resource.
+DB_PATH = app_dir() / "data" / "chessiq.db"
+SCHEMA_PATH = Path(resource_path("schema.sql"))
 
 # The profiles chessIQ ships with. A profile name is the player's username.
 DEFAULT_PROFILES = ["Stock-Fish24", "rohitkparida", "ShawttyBad"]

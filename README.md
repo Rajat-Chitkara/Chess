@@ -10,12 +10,36 @@ It ships with both a **web app** (an interactive board you practice on in the
 browser) and the original **CLI**. Everything runs locally. No cloud, no
 accounts beyond Lichess itself.
 
-## Run the website
+## Run it as a standalone app (no Python needed)
+
+chessIQ can be packaged into a single Windows folder your friends double-click —
+Python, Flask, and Stockfish are all bundled, so they install nothing.
+
+**Build it (owner, once — needs Python + Stockfish):**
+```bat
+build.bat
+```
+This produces `dist\chessIQ\`. Zip that folder and share it. (It bundles
+`stockfish\stockfish.exe`; if you don't have one, download it from
+https://stockfishchess.org/download/ and drop it at `stockfish\stockfish.exe`
+before building.)
+
+**Run it (your friends — nothing to install):**
+1. Unzip the `chessIQ` folder anywhere.
+2. Double-click **`chessIQ.exe`** — it opens chessIQ in the browser.
+3. Import your chess.com / Lichess games, hit **Analyse**, then **Practice**.
+
+Each person's data is a private SQLite file at `chessIQ\data\chessiq.db`, right
+next to the exe — portable, and easy to back up or delete. Keep the small
+console window open while using the app; closing it quits chessIQ.
+
+## Run from source
 
 ```bash
 pip install -r requirements.txt
 python main.py init        # one-time: create the database
-python app.py              # then open http://127.0.0.1:5000/
+python desktop.py          # app mode: starts the server + opens your browser
+# or:  python app.py       # dev mode (Flask debug server) at http://127.0.0.1:5000/
 ```
 
 The web app has four pages: **Dashboard** (your skill scores), **Practice**
