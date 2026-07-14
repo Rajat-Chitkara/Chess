@@ -158,6 +158,13 @@ main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 /* ============================ Game Review ============================ */
 :root { --cc-green: #7fa650; --cc-green-dark: #6a8f42; }
 
+/* move-quality breakdown (your moves in this game) */
+.quality-summary { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
+.qs-label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; margin-right: .2rem; }
+.qs-pill { display: inline-flex; align-items: baseline; gap: .3rem; padding: .35rem .7rem;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-size: .85rem; }
+.qs-pill b { font-size: 1.05rem; font-weight: 800; }
+
 .review-layout { display: grid; grid-template-columns: minmax(320px, 1fr) 360px; gap: 1.4rem; align-items: start; }
 @media (max-width: 860px) { .review-layout { grid-template-columns: 1fr; } }
 

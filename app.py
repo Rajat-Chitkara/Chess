@@ -204,6 +204,8 @@ def game_detail(game_id):
 
     # Per-move review labels + coach commentary (chess.com-style, heuristic).
     game_review.annotate(moves)
+    # Counts of YOUR moves by quality (best/book/good/inaccuracy/mistake/blunder).
+    qsummary = game_review.summarize_quality(moves)
 
     # Group half-moves into full-move rows (num, white, black) for the move table.
     by_num = {}
@@ -220,8 +222,8 @@ def game_detail(game_id):
     players = _players_from_pgn(game.get("pgn", ""), game.get("your_color"))
 
     return render_template("game_detail.html", game=game, moves=moves, move_rows=move_rows,
-                           summary=summary, start_fen=start_fen, mistake_plies=mistake_plies,
-                           evals=evals, players=players,
+                           summary=summary, qsummary=qsummary, start_fen=start_fen,
+                           mistake_plies=mistake_plies, evals=evals, players=players,
                            orientation=game["your_color"] or "white", active="games")
 
 

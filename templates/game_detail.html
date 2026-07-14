@@ -19,6 +19,16 @@
 </section>
 {% else %}
 
+<div class="quality-summary">
+  <span class="qs-label">Your moves</span>
+  <span class="qs-pill q-best"><b>{{ qsummary.best }}</b> Best</span>
+  <span class="qs-pill q-book"><b>{{ qsummary.book }}</b> Book</span>
+  <span class="qs-pill q-good"><b>{{ qsummary.good }}</b> Good</span>
+  <span class="qs-pill q-inacc"><b>{{ qsummary.inaccuracy }}</b> Inaccuracies</span>
+  <span class="qs-pill q-mist"><b>{{ qsummary.mistake }}</b> Mistakes</span>
+  <span class="qs-pill q-blun"><b>{{ qsummary.blunder }}</b> Blunders</span>
+</div>
+
 <div class="review-layout">
 
   <!-- LEFT: eval bar + board + players -->
