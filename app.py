@@ -206,6 +206,12 @@ def game_detail(game_id):
     game_review.annotate(moves)
     # Counts of YOUR moves by quality (best/book/good/inaccuracy/mistake/blunder).
     qsummary = game_review.summarize_quality(moves)
+    # 1-based ply positions of YOUR moves in each quality, so clicking a summary
+    # pill can cycle through that category's moves.
+    quality_plies = {k: [] for k in ("best", "book", "good", "inaccuracy", "mistake", "blunder")}
+    for i, m in enumerate(moves, start=1):
+        if m["is_your_move"] and m.get("quality") in quality_plies:
+            quality_plies[m["quality"]].append(i)
 
     # Group half-moves into full-move rows (num, white, black) for the move table.
     by_num = {}
@@ -222,9 +228,9 @@ def game_detail(game_id):
     players = _players_from_pgn(game.get("pgn", ""), game.get("your_color"))
 
     return render_template("game_detail.html", game=game, moves=moves, move_rows=move_rows,
-                           summary=summary, qsummary=qsummary, start_fen=start_fen,
-                           mistake_plies=mistake_plies, evals=evals, players=players,
-                           orientation=game["your_color"] or "white", active="games")
+                           summary=summary, qsummary=qsummary, quality_plies=quality_plies,
+                           start_fen=start_fen, mistake_plies=mistake_plies, evals=evals,
+                           players=players, orientation=game["your_color"] or "white", active="games")
 
 
 @app.route("/import")

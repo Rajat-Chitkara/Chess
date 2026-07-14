@@ -162,8 +162,13 @@ main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 .quality-summary { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
 .qs-label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; margin-right: .2rem; }
 .qs-pill { display: inline-flex; align-items: baseline; gap: .3rem; padding: .35rem .7rem;
-  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-size: .85rem; }
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-size: .85rem;
+  transition: border-color .15s, background .15s; }
 .qs-pill b { font-size: 1.05rem; font-weight: 800; }
+.qs-pill.clickable { cursor: pointer; }
+.qs-pill.clickable:hover { border-color: var(--accent); background: var(--panel-2); }
+.qs-pill:not(.clickable) { opacity: .5; }
+.qs-label em { font-style: normal; text-transform: none; letter-spacing: 0; opacity: .8; }
 
 .review-layout { display: grid; grid-template-columns: minmax(320px, 1fr) 360px; gap: 1.4rem; align-items: start; }
 @media (max-width: 860px) { .review-layout { grid-template-columns: 1fr; } }

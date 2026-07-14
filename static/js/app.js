@@ -322,6 +322,13 @@ window.chessIQ = (function () {
       const next = (data.mistakePlies || []).find(p => p > cur);
       if (next !== undefined) go(next);
     }
+    // Jump to the next move of a given quality, wrapping around to the first.
+    function jumpQuality(q) {
+      const list = (data.qualityPlies && data.qualityPlies[q]) || [];
+      if (!list.length) return;
+      const next = list.find(p => p > cur);
+      go(next !== undefined ? next : list[0]);
+    }
     function stopPlay() { if (playTimer) { clearInterval(playTimer); playTimer = null; $("nav-play").textContent = "▶"; } }
     function togglePlay() {
       if (playTimer) { stopPlay(); return; }
@@ -341,6 +348,8 @@ window.chessIQ = (function () {
     $("nav-mistake").addEventListener("click", (e) => { e.preventDefault(); nextMistake(); });
     $("btn-explain").addEventListener("click", () => { explaining = !explaining; render(); });
     moveEls.forEach(el => el.addEventListener("click", () => go(parseInt(el.dataset.ply, 10))));
+    document.querySelectorAll(".qs-pill.clickable").forEach(el =>
+      el.addEventListener("click", () => jumpQuality(el.dataset.quality)));
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") { go(cur - 1); e.preventDefault(); }

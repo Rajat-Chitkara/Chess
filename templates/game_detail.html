@@ -20,13 +20,13 @@
 {% else %}
 
 <div class="quality-summary">
-  <span class="qs-label">Your moves</span>
-  <span class="qs-pill q-best"><b>{{ qsummary.best }}</b> Best</span>
-  <span class="qs-pill q-book"><b>{{ qsummary.book }}</b> Book</span>
-  <span class="qs-pill q-good"><b>{{ qsummary.good }}</b> Good</span>
-  <span class="qs-pill q-inacc"><b>{{ qsummary.inaccuracy }}</b> Inaccuracies</span>
-  <span class="qs-pill q-mist"><b>{{ qsummary.mistake }}</b> Mistakes</span>
-  <span class="qs-pill q-blun"><b>{{ qsummary.blunder }}</b> Blunders</span>
+  <span class="qs-label">Your moves <em>(click to step through)</em></span>
+  <span class="qs-pill q-best{{ ' clickable' if qsummary.best }}" data-quality="best"><b>{{ qsummary.best }}</b> Best</span>
+  <span class="qs-pill q-book{{ ' clickable' if qsummary.book }}" data-quality="book"><b>{{ qsummary.book }}</b> Book</span>
+  <span class="qs-pill q-good{{ ' clickable' if qsummary.good }}" data-quality="good"><b>{{ qsummary.good }}</b> Good</span>
+  <span class="qs-pill q-inacc{{ ' clickable' if qsummary.inaccuracy }}" data-quality="inaccuracy"><b>{{ qsummary.inaccuracy }}</b> Inaccuracies</span>
+  <span class="qs-pill q-mist{{ ' clickable' if qsummary.mistake }}" data-quality="mistake"><b>{{ qsummary.mistake }}</b> Mistakes</span>
+  <span class="qs-pill q-blun{{ ' clickable' if qsummary.blunder }}" data-quality="blunder"><b>{{ qsummary.blunder }}</b> Blunders</span>
 </div>
 
 <div class="review-layout">
@@ -114,7 +114,8 @@
 
 <script type="application/json" id="game-data">
 {{ {"orientation": orientation, "start_fen": start_fen,
-    "moves": moves, "mistakePlies": mistake_plies, "evals": evals} | tojson }}
+    "moves": moves, "mistakePlies": mistake_plies, "evals": evals,
+    "qualityPlies": quality_plies} | tojson }}
 </script>
 {% endif %}
 {% endif %}
